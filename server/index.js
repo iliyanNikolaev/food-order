@@ -2,21 +2,17 @@ const express = require('express');
 const dbConnect = require('./config/db');
 const { register, login } = require('./services/User');
 const { errorParser } = require('./utils/errorParser');
-
-const cors = require('cors');
-const session = require('./middlewares/session');
-const bodyTrim = require('./middlewares/bodyTrim');
+const expressConf = require('./config/express');
 
 const app = express();
-app.use(cors());
-app.use(express.json());
-app.use(session());
-app.use(bodyTrim());
+
 
 start();
 
 async function start() {
     await dbConnect();
+    expressConf(app);
+    
     app.get('/', (req, res) => res.send('hello'));
 
     app.post('/auth/register', async (req, res) => {
@@ -71,7 +67,6 @@ function loginDto(req) {
     if(req.body.username.length < 2 || req.body.username.length > 20) {
         throw new Error('The username should be between 2 and 20 characters long');
     }
-    
     if(req.body.password.length < 4) {
         throw new Error('The password should be at least 4 characters long');
     }
