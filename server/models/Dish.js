@@ -1,3 +1,5 @@
+const { Schema, model, Types } = require('mongoose');
+
 const dishSchema = new Schema({
     restaurantId: { type: Types.ObjectId, required: true, ref: 'Restaurant' },
     name: { type: String, required: true },
